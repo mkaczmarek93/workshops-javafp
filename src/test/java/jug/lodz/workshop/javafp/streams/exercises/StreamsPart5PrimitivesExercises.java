@@ -29,8 +29,8 @@ public class StreamsPart5PrimitivesExercises {
 
     private int sum(int n){
         return IntStream
-                .iterate(1,null) //<- FIX
-                .limit(0)  //<- FIX
+                .iterate(1,i->i+1) //<- FIX
+                .limit(n)  //<- FIX
                 .sum();
     }
 
@@ -42,7 +42,7 @@ public class StreamsPart5PrimitivesExercises {
     public void findMaxInt() throws Exception {
         OptionalInt optionalMax = IntStream
                 .of(11, 22, 4, 5, 9, 1, 79, 2, 3)
-                .findAny();  // <- FIX
+                .max();  // <- FIX
 
         assertThat(optionalMax).hasValue(79);
 
@@ -55,7 +55,8 @@ public class StreamsPart5PrimitivesExercises {
                 new BigInteger("10"),
                 new BigInteger("20"),
                 new BigInteger("30")
-        ).mapToInt(null).hashCode();  // <- FIX BOTH , change boxed type to int and then replace 'hashCode' method
+        ).mapToInt(b->b.intValue())
+                .sum();  // <- FIX BOTH , change boxed type to int and then replace 'hashCode' method
 
         assertThat(sum).isEqualTo(60);
     }

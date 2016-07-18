@@ -17,57 +17,58 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class StreamsPart4LazyComputationExercises {
 
-    //DO THOSe EXERCISES TOGETHER
+	//DO THOSe EXERCISES TOGETHER
 
-    @Test
-    public void generate7RandomNumbers() throws Exception {
-        List<Double> result = Stream
-                .<Double>generate(null)    // Math.rand
-                .limit(7)
-                .collect(null);       // we need a list
+	@Test
+	public void generate7RandomNumbers() throws Exception {
+		List<Double> result = Stream
+				.<Double>generate(Math::random)    // Math.rand
+				.limit(7)
+				.collect(Collectors.toList());       // we need a list
 
-//        System.out.println(result);
+		System.out.println(result);
 
-        assertThat(result).hasSize(7);
-    }
+		assertThat(result).hasSize(7);
+	}
 
 
-    /**
-     * don't modify test - implement 'isPrime' method
-     */
-    @Test
-    public void testIsPrime() throws Exception {
-        assertThat(isPrime(7)).isTrue();
-        assertThat(isPrime(13)).isTrue();
-        assertThat(isPrime(21)).isFalse();
-    }
+	/**
+	 * don't modify test - implement 'isPrime' method
+	 */
+	@Test
+	public void testIsPrime() throws Exception {
+		assertThat(isPrime(7)).isTrue();
+		assertThat(isPrime(13)).isTrue();
+		assertThat(isPrime(21)).isFalse();
+	}
 
-    /**
-     *
-            1)in noneMatch check if candidate can be divided by i
-     */
-    private boolean isPrime(int candidate) {
-        return IntStream.range(2, candidate)
-                .noneMatch(null);
-    }
+	/**
+	 * 1)in noneMatch check if candidate can be divided by i
+	 */
+	private boolean isPrime(int candidate) {
+		return IntStream.range(2, candidate)
+				.noneMatch(i -> candidate % i == 0);
+	}
 
-    @Test
-    public void testFibonacci() throws Exception {
-        List<Integer> fib10 = fibonacci(10);
+	@Test
+	public void testFibonacci() throws Exception {
+		List<Integer> fib10 = fibonacci(10);
 
-        assertThat(fib10).containsExactly(0,1,1,2,3,5,8,13,21,34);
-    }
+		System.out.println(fib10);
 
-    private List<Integer> fibonacci(int limit){
-        Tuple2<Integer, Integer> seed = null; // tuple of 0 & 1
+		assertThat(fib10).containsExactly(0, 1, 1, 2, 3, 5, 8, 13, 21, 34);
+	}
 
-        UnaryOperator<Tuple2<Integer,Integer>> step= null;   // t[2],t[1]+t[2]
+	private List<Integer> fibonacci(int limit) {
+		Tuple2<Integer, Integer> seed = new Tuple2<>(0,1); // tuple of 0 & 1
 
-        return Stream.iterate(seed, step)
-                .limit(limit)
-                .<Integer>map(null)  // tuple -> first element
-                .collect(Collectors.toList());
-    }
+		UnaryOperator<Tuple2<Integer, Integer>> step = t-> Tuple.of(t._2, t._1+t._2);   // t[2],t[1]+t[2]
+
+		return Stream.iterate(seed, step)
+				.limit(limit)
+				.<Integer>map(t->t._1)  // tuple -> first element
+				.collect(Collectors.toList());
+	}
 }
 
 
